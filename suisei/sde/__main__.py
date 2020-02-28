@@ -28,7 +28,7 @@ import argparse
 import traceback
 
 # SDE Imports
-from suisei.sde.application import SDE
+from sde.application import SDE
 
 if __name__ == '__main__':
 

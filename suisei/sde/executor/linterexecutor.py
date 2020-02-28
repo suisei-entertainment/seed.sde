@@ -29,7 +29,7 @@ import logging
 import pylint.lint
 
 # SDE Imports
-from suisei.sde.executor.executor import Executor
+from sde.executor.executor import Executor
 
 class LinterExecutor(Executor):
 

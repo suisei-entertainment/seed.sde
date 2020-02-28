@@ -26,9 +26,6 @@ Contains the implementation of the PythonBuilder class.
 import os
 import logging
 
-# Dependency Imports
-import PyInstaller.__main__
-
 # SDE Imports
 from .builder import Builder
 

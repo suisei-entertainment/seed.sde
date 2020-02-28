@@ -39,11 +39,11 @@ from suisei.seed.utils import ProductVersion
 from suisei.seed.exceptions import InvalidInputError
 
 # SDE Imports
-from suisei.sde.component import ComponentDescriptor
-from suisei.sde.executor.linterexecutor import LinterExecutor
-from suisei.sde.executor.coverageexecutor import CoverageExecutor
-from suisei.sde.executor.buildexecutor import BuildExecutor
-from suisei.sde.executor.unittestexecutor import UnitTestExecutor
+from sde.component import ComponentDescriptor
+from sde.executor.linterexecutor import LinterExecutor
+from sde.executor.coverageexecutor import CoverageExecutor
+from sde.executor.buildexecutor import BuildExecutor
+from sde.executor.unittestexecutor import UnitTestExecutor
 
 class SDE:
 

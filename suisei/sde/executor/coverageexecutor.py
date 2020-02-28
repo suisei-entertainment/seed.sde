@@ -26,7 +26,7 @@ Contains the implementation of the SDE coverage test executor.
 import logging
 
 # SDE Imports
-from suisei.sde.executor.executor import Executor
+from sde.executor.executor import Executor
 
 class CoverageExecutor(Executor):
 
