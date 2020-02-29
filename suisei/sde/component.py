@@ -31,7 +31,7 @@ from enum import IntEnum
 from suisei.seed.exceptions import InvalidInputError
 
 # SEED Imports
-from sde.builder import BuilderLoader, BuildTypes
+from suisei.sde.builder import BuilderLoader, BuildTypes
 
 class ComponentDescriptor:
 

@@ -21,3 +21,5 @@
 ## ============================================================================
 
 pyinstaller --noconfirm --onefile --clean --hidden-import='pkg_resources.py2_warn' --name sde ./suisei/sde/__main__.py
+python setup.py sdist bdist_wheel
+pip install ./dist/suisei_sde-0.1.0-py3-none-any.whl

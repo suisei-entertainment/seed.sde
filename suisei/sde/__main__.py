@@ -28,95 +28,95 @@ import argparse
 import traceback
 
 # SDE Imports
-from sde.application import SDE
+from suisei.sde.application import SDE
 
-if __name__ == '__main__':
+def main():
 
     # Setup command line parser
-    PARSER = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description=\
         'SDE command line utility to automate common development tasks.',
         epilog=\
         'For more information please read the development documentation.',
         usage='sde [options]')
 
-    BUILD_SYSTEM = PARSER.add_argument_group(
+    build_system = parser.add_argument_group(
         title='Build System',
         description='Contains commands related to the build system.')
 
-    BUILD_SYSTEM.add_argument(
+    build_system.add_argument(
         '--build',
         dest='build',
         action='store',
         help='Executes the build script of the given component.',
         metavar='component')
 
-    TEST_EXECUTOR = PARSER.add_argument_group(
+    test_executor = parser.add_argument_group(
         title='Test Executor',
         description='Contains commands related to the test executor.')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--unit-test',
         dest='unittest',
         action='store',
         help='Executes the unit tests of the given component.',
         metavar='component')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--feature-test',
         dest='featuretest',
         action='store',
         help='Executes the feature tests of the given component.',
         metavar='component')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--system-test',
         dest='systemtest',
         action='store',
         help='Executes the system tests of the given component.',
         metavar='component')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--performance-test',
         dest='performancetest',
         action='store',
         help='Executes the performacne tests of the given component.',
         metavar='component')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--linter',
         dest='linter',
         action='store_true',
         help='Executes the linter.')
 
-    TEST_EXECUTOR.add_argument(
+    test_executor.add_argument(
         '--coverage',
         dest='coverage',
         action='store_true',
         help='Executes the coverage test.')
 
-    INSTALLER = PARSER.add_argument_group(
+    installer = parser.add_argument_group(
         title='Installer',
         description='Contains commands related to the environment installer')
 
-    INSTALLER.add_argument(
+    installer.add_argument(
         '--install',
         dest='install',
         action='store_true',
         help='Installs a local development environment.')
 
-    MISC = PARSER.add_argument_group(
+    misc = parser.add_argument_group(
         title='Misc',
         description='Additional supported commands')
 
-    MISC.add_argument(
+    misc.add_argument(
         '-v', '--version',
         dest='version',
         action='store_true',
         help='Displays the current SDE version.',
         default=False)
 
-    MISC.add_argument(
+    misc.add_argument(
         '-d', '--debug',
         dest='debug',
         action='store_true',
@@ -124,7 +124,7 @@ if __name__ == '__main__':
              'debug logging.',
         default=False)
 
-    MISC.add_argument(
+    misc.add_argument(
         '--opendocs',
         dest='opendocs',
         action='store_true',
@@ -133,43 +133,43 @@ if __name__ == '__main__':
         default=False)
 
     # Parse command line
-    ARGS = PARSER.parse_args(sys.argv[1:])
+    args = parser.parse_args(sys.argv[1:])
 
     # Start SDE
     try:
-        APP = SDE(debug=ARGS.debug)
+        app = SDE(debug=args.debug)
 
-        if ARGS.version:
-            APP.execute(mode='version')
+        if args.version:
+            app.execute(mode='version')
 
-        if ARGS.build is not None:
-            APP.execute(mode='build', component=ARGS.build)
+        if args.build is not None:
+            app.execute(mode='build', component=args.build)
 
-        if ARGS.unittest is not None:
-            APP.execute(mode='unittest', component=ARGS.unittest)
+        if args.unittest is not None:
+            app.execute(mode='unittest', component=args.unittest)
 
-        if ARGS.featuretest is not None:
-            APP.execute(mode='featuretest', component=ARGS.featuretest)
+        if args.featuretest is not None:
+            app.execute(mode='featuretest', component=args.featuretest)
 
-        if ARGS.systemtest is not None:
-            APP.execute(mode='systemtest', component=ARGS.systemtest)
+        if args.systemtest is not None:
+            app.execute(mode='systemtest', component=args.systemtest)
 
-        if ARGS.performancetest is not None:
-            APP.execute(mode='performancetest',
-                        component=ARGS.performancetest)
+        if args.performancetest is not None:
+            app.execute(mode='performancetest',
+                        component=args.performancetest)
 
-        if ARGS.linter:
-            APP.execute(mode='linter')
+        if args.linter:
+            app.execute(mode='linter')
 
-        if ARGS.coverage:
-            APP.execute(mode='coverage')
+        if args.coverage:
+            app.execute(mode='coverage')
 
-        if ARGS.install:
-            APP.execute(mode='install')
+        if args.install:
+            app.execute(mode='install')
 
-        if ARGS.opendocs:
+        if args.opendocs:
             try:
-                APP.execute(mode='opendocs')
+                app.execute(mode='opendocs')
             except FileNotFoundError as exception:
                 raise SystemExit(exception)
 
@@ -178,3 +178,6 @@ if __name__ == '__main__':
         print('>>>>> UNHANDLED EXCEPTION <<<<<')
         print(traceback.print_exc())
         print('>>>>> :UNHANDLED EXCEPTION: <<<<<')
+
+if __name__ == '__main__':
+    main()

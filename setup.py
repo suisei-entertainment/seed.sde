@@ -19,52 +19,39 @@
 ## ============================================================================
 
 """
-Contains the implementation of the SDE linter executor.
+Setup script for seed.utils.
 """
 
 # Platform Imports
-import logging
+import setuptools
 
-# Dependency Imports
-import pylint.lint
+with open('README.md', 'r') as readme_file:
+    long_description = readme_file.read()
 
-# SDE Imports
-from suisei.sde.executor.executor import Executor
-
-class LinterExecutor(Executor):
-
-    """
-    Utility class to execute the linter tool and generate reports.
-
-    Authors:
-        Attila Kovacs
-    """
-
-    def execute(self) -> None:
-
-        """
-        Executes the linter.
-
-        Authors:
-            Attila Kovacs
-        """
-
-        result = 0
-        logger = logging.getLogger('suisei.sde')
-
-        logger.debug('Executing linter...')
-
-        pylint_opts = \
-        [
-            '-j 0',
-            '--reports=yes',
-            '--rcfile=./.pylintrc',
-            './suisei/'
+setuptools.setup(
+    name='suisei-sde',
+    version='0.1.0',
+    author='Suisei Entertinment',
+    author_email='info@suiseientertainment.com',
+    description='SEED development environment CLI utility.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    url='https://github.com/suisei-ent/seed.sde',
+    namespace_packages=[
+        'suisei'],
+    packages=[
+        'suisei.sde',
+        'suisei.sde.builder',
+        'suisei.sde.executor'],
+    entry_points={
+        'console_scripts': [
+            'sde = suisei.sde.__main__:main'
         ]
-
-        result = pylint.lint.Run(pylint_opts)
-
-        if result >= 32:
-            logger.error('Failed to execute linter.')
-        else:
-            logger.debug('Linter executed successfully.')
+    },
+    classifiers=[
+        'Programming Language :: Python :: 3.8',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Operating System :: POSIX :: Linux',
+        'Topic :: Games/Entertainment',
+        'Environment :: Console'
+    ])

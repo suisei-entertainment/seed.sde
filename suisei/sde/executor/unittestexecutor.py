@@ -32,7 +32,7 @@ import shutil
 from tap import TAPTestRunner
 
 # SDE Imports
-from sde.executor.executor import Executor
+from suisei.sde.executor.executor import Executor
 
 class UnitTestExecutor(Executor):
 

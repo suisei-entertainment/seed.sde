@@ -23,9 +23,9 @@ Contains the implementation of the BuildExecutor class.
 """
 
 # SDE Imports
-from sde.component import ComponentDescriptor
+from suisei.sde.component import ComponentDescriptor
 
-from sde.builder import (
+from suisei.sde.builder import (
     BuildTypes,
     ArtifactoryBuilder,
     CMakeBuilder,
