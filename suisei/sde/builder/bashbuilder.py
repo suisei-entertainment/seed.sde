@@ -19,34 +19,53 @@
 ## ============================================================================
 
 """
-Contains the list of supported builder types.
+Contains the implementation of the DebBuilder class.
 """
 
-# Platfrom Imports
-from enum import IntEnum
+# Platform Imports
+import os
+import logging
 
-class BuildTypes(IntEnum):
+# SDE Imports
+from .builder import Builder
+
+class BashBuilderConfig:
 
     """
-    List of supported build types.
+    Utility class that contains the builder configuration of a bash
+    builder.
 
     Authors:
         Attila Kovacs
     """
 
-    UNKNOWN = 0     # Unknown build type
+    def __init__(self) -> None:
 
-    CMAKE = 1           # CMake build system
-    MAKE = 2            # Make build system
-    PROTOBUF = 3        # Protobuf compiler
-    SPHINX = 4          # Sphinx
-    ARTIFACTORY = 5     # Artifactory (retrieve the dependency from
-                        # Artifactory)
-    PYTHON = 6          # Python build based on PyInstaller
-    DEB = 7             # Debian package builder
-    DOCKER = 8          # Dockerfile based docker builder
-    MULTISTAGE = 9      # Builder with multiple build stages
-    CONTENT = 10        # Builder that moves files between locations
-    VERSIONBUMPER = 11  # Builder that increases the version number in a given
-                        # product version descriptor.
-    BASH = 12           # Builder that executes a bash script.
+        """
+        Creates a new BashBuilderConfig instance.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        return
+
+class BashBuilder(Builder):
+
+    """
+    Builder implementation that executes a bash script.
+
+    Authors:
+        Attila Kovacs
+    """
+
+    def build(self) -> None:
+
+        """
+        Executes the actual component build based on the component descriptor.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        logger = logging.getLogger('suisei.sde')

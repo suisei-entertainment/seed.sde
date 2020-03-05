@@ -19,34 +19,49 @@
 ## ============================================================================
 
 """
-Contains the list of supported builder types.
+Contains the implementation of the SDE release executor.
 """
 
-# Platfrom Imports
-from enum import IntEnum
+# SDE Imports
+from suisei.sde.executor.executor import Executor
 
-class BuildTypes(IntEnum):
+class ReleaseExecutor(Executor):
 
     """
-    List of supported build types.
+    Contains the implementation of the release script executor.
 
     Authors:
         Attila Kovacs
     """
 
-    UNKNOWN = 0     # Unknown build type
+    def __init__(self, component: str, application: 'SDE') -> None:
 
-    CMAKE = 1           # CMake build system
-    MAKE = 2            # Make build system
-    PROTOBUF = 3        # Protobuf compiler
-    SPHINX = 4          # Sphinx
-    ARTIFACTORY = 5     # Artifactory (retrieve the dependency from
-                        # Artifactory)
-    PYTHON = 6          # Python build based on PyInstaller
-    DEB = 7             # Debian package builder
-    DOCKER = 8          # Dockerfile based docker builder
-    MULTISTAGE = 9      # Builder with multiple build stages
-    CONTENT = 10        # Builder that moves files between locations
-    VERSIONBUMPER = 11  # Builder that increases the version number in a given
-                        # product version descriptor.
-    BASH = 12           # Builder that executes a bash script.
+        """
+        Creates a new ReleaseExecutor instance.
+
+        Args:
+            component:          The component which will be released.
+            application:        The SDE application instance.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        super().__init__(application)
+
+        # Name of the component to build
+        if not self._application.has_component(component):
+            raise RuntimeError('Component {} does not exist.'.format(component))
+
+        self._component = self._application.Components[component]
+
+    def execute(self) -> None:
+
+        """
+        Contains the main execution logic.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        return

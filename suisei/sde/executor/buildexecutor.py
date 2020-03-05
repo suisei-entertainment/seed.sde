@@ -55,7 +55,7 @@ class BuildExecutor(Executor):
         Creates a new BuildExecutor instance.
 
         Args:
-            component:          The component which will be tested.
+            component:          The component which will be built.
             application:        The SDE application instance.
 
         Authors:

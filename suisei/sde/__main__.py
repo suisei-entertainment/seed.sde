@@ -105,6 +105,17 @@ def main():
         action='store_true',
         help='Installs a local development environment.')
 
+    releaser = parser.add_argument_group(
+        title='Release Management',
+        description='Contains commands related to the release management '
+                    'utilities.')
+
+    releaser.add_argument(
+        '--release',
+        dest='release',
+        action='store',
+        help='Creates a new release version with the given version number.')
+
     misc = parser.add_argument_group(
         title='Misc',
         description='Additional supported commands')
@@ -166,6 +177,9 @@ def main():
 
         if args.install:
             app.execute(mode='install')
+
+        if args.release is not None:
+            app.execute(mode='release', component=args.release)
 
         if args.opendocs:
             try:

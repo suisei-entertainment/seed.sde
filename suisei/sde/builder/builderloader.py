@@ -31,6 +31,7 @@ from suisei.seed.exceptions import InvalidInputError
 
 # SDE Imports
 from .buildtypes import BuildTypes
+from .bashbuilder import BashBuilder
 from .artifactorybuilder import ArtifactoryBuilderConfig
 from .cmakebuilder import CMakeBuilderConfig
 from .contentbuilder import ContentBuilderConfig
@@ -108,6 +109,8 @@ class BuilderLoader:
                 self._load_content_builder(descriptor)
             elif build_type == 'versionbumper':
                 self._load_versionbumper_builder(descriptor)
+            elif build_type == 'bash'
+                self._load_bash_builder(descriptor)
             else:
                 raise InvalidInputError(
                     'Invalid build type {} was specified in the configuration '
@@ -177,6 +180,24 @@ class BuilderLoader:
 
         builder_config = ProtobufBuilderConfig()
 
+        self._component.set_builder_config(builder_config)
+
+    def _load_bash_builder(self, descriptor: dict) -> None:
+
+        """
+        Loads the configuration of a bash builder from the component
+        descriptor.
+
+        Args:
+            descriptor:     The component descriptor from the configuration
+                            file.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        self._component._build_type = BuildTypes.BASH
+        builder_config = BashBuilderConfig()
         self._component.set_builder_config(builder_config)
 
     def _load_sphinx_builder(self, descriptor: dict) -> None:

@@ -166,7 +166,9 @@ class SDE:
         # Configure logging
         self._configure_logging()
 
-    def execute(self, mode: str, component: str = None) -> None:
+    def execute(self,
+                mode: str,
+                component: str = None) -> None:
 
         """
         Executes the requested sub-tool based on command line input.
@@ -185,6 +187,7 @@ class SDE:
                             - install:          Executes the installer.
                             - opendocs:         Opens the development
                                                 documentation.
+                            - release:          Executes the release script.
             component:  The name of the component to perform the operation on.
 
         Authors:
@@ -458,6 +461,18 @@ class SDE:
 
         """
         Handler function that is called when the install command is selected
+        through command line.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        del component
+
+    def _on_execute_release(self, component: str) -> None:
+
+        """
+        Handler function that is called when the release command is selected
         through command line.
 
         Authors:
