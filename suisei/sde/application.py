@@ -29,6 +29,7 @@ import logging
 import sys
 import webbrowser
 import glob
+import subprocess
 from logging.handlers import RotatingFileHandler
 
 # Dependency Imports
@@ -36,7 +37,7 @@ import coloredlogs
 from termcolor import colored
 
 # SEED Imports
-from suisei.seed.utils import ProductVersion
+from suisei.seed.utils import ProductVersion, JsonFile
 from suisei.seed.exceptions import InvalidInputError
 
 # SDE Imports
@@ -551,6 +552,8 @@ class SDE:
             Attila Kovacs
         """
 
+        logger = logging.getLogger('suisei.sde')
+
         # Default SDE configuation descriptor
         default_config = \
         {
@@ -572,7 +575,7 @@ class SDE:
                 "loglevel": "INFO"
             },
             "documentationpath": "~/.sde/build/doc/development/html/index.html",
-            "componentpath": "~/.sde/components/"
+            "componentpath": "~/.sde/components/components/"
         }
 
         # Save config file
@@ -584,7 +587,27 @@ class SDE:
                   'default configuration. <<<<< ERROR')
 
         # Get component configuration
+        target_path = os.path.abspath(os.path.expanduser('~/.sde/'))
+        current_dir = os.getcwd()
+        os.chdir(target_path)
 
+        try:
+            command = 'git clone https://github.com/suisei-entertainment/seed.components.git ./components'
+            subprocess.run(command, shell=True, check=True)
+        except subprocess.CalledProcessError as error:
+            logger.error('Failed to clone the components repository. '
+                'Error: %s', error.returncode)
+
+        os.chdir(os.path.abspath('{}/components'.format(target_path)))
+
+        try:
+            command = 'git checkout development'
+            subprocess.run(command, shell=True, check=True)
+        except subprocess.CalledProcessError as error:
+            logger.error('Failed to switch to the development branch. '
+                'Error: %s', error.returncode)
+
+        os.chdir(current_dir)
 
     def _load_configuration(self, config_path: str) -> None:
 
@@ -597,6 +620,8 @@ class SDE:
         Authors:
             Attila Kovacs
         """
+
+        logger = logging.getLogger('suisei.sde')
 
         content = {}
 
@@ -631,9 +656,10 @@ class SDE:
         except KeyError:
             # Component path not found in the configuration, use the default
             # path
-            component_path = '~/.sde/components/'
+            component_path = '~/.sde/components/components/'
 
         component_path = os.path.abspath(os.path.expanduser(component_path))
+        logger.debug('Loading components from %s...', component_path)
 
         if not os.path.isdir(component_path):
             raise SystemExit(
@@ -641,20 +667,19 @@ class SDE:
                     component_path))
 
         # Load all component descriptors from the component directory
-        current_dir = os.getcwd()
-        os.chdir(component_path)
-        file_list = glob.glob('*.component')
+        file_list = glob.glob('{}/*.component'.format(component_path))
 
         for file in file_list:
+            logger.debug('Loading component descriptor %s', file)
             try:
                 component_file = JsonFile(path=file)
                 component_file.load()
-                desc = ComponentDescriptor(component_file.Content)
+                desc = ComponentDescriptor(descriptor=component_file.Content,
+                                           application=self)
                 self._components[desc.ID] = desc
+                logger.debug('Component %s was added successfully.', desc.ID)
             except InvalidInputError:
                 del desc
-
-        os.chdir(current_dir)
 
         # Load documentation path
         try:

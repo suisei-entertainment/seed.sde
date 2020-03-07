@@ -173,13 +173,16 @@ class UnitTestExecutor(Executor):
         logger.debug('Creating test runner for component %s...', component)
 
         try:
+            descriptor = self._application.Components[component]
+        except KeyError:
+            logger.error('Component %s was not found', component)
+            return
+
+        try:
             self._test_runner = TAPTestRunner(
-                verbosity=self._application.get_ut_verbosity(
-                    component))
-            self._test_runner.set_outdir(
-                self._application.get_ut_outdir(component))
-            self._test_runner.set_format(
-                self._application.get_ut_log_format(component))
+                verbosity=descriptor.UnitTestVerbosity)
+            self._test_runner.set_outdir(descriptor.UnitTestOutDir)
+            self._test_runner.set_format(descriptor.UnitTestLogFormat)
             logger.debug('Saving test output to %s',
                          self._application.get_ut_outdir(component))
         except ImportError:
@@ -187,8 +190,7 @@ class UnitTestExecutor(Executor):
                            'system, falling back to the default unit test '
                            'runner.')
             self._test_runner = unittest.TextTestRunner(
-                verbosity=self._application.get_ut_verbosity(
-                    component))
+                verbosity=descriptor.UnitTestVerbosity)
 
         logger.debug('Test runner created successfully.')
 
@@ -214,9 +216,14 @@ class UnitTestExecutor(Executor):
         logger.debug('Building test suite for component %s to execute...',
                      component)
 
+        try:
+            descriptor = self._application.Components[component]
+        except KeyError:
+            logger.error('Component %s was not found', component)
+            return
+
         test_loader = unittest.TestLoader()
-        unit_test_path = \
-                self._application.get_test_file_path(component)
+        unit_test_path = descriptor.UnitTestLocation
 
         if unit_test_path is None:
             logger.debug('Component %s has no unit tests.', component)
