@@ -19,7 +19,7 @@
 ## ============================================================================
 
 """
-Contains the implementation of the DebBuilder class.
+Contains the implementation of the BashBuilder class.
 """
 
 # Platform Imports

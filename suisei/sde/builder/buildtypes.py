@@ -50,3 +50,5 @@ class BuildTypes(IntEnum):
     VERSIONBUMPER = 11  # Builder that increases the version number in a given
                         # product version descriptor.
     BASH = 12           # Builder that executes a bash script.
+    WHEEL = 13          # Builder that creates Python wheels
+    PIP = 14            # Builder that install a Python package through pip.

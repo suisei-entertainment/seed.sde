@@ -1,5 +1,3 @@
-#!/bin/bash
-
 ## ============================================================================
 ##                   **** SEED Virtual Reality Platform ****
 ##                Copyright (C) 2019-2020, Suisei Entertainment
@@ -20,12 +18,54 @@
 ##
 ## ============================================================================
 
-# Remove previously installed version
-pip uninstall -y suisei-sde
+"""
+Contains the implementation of the PipBuilder class.
+"""
 
-# Create binary package
-pyinstaller --noconfirm --onefile --clean --hidden-import='pkg_resources.py2_warn' --name sde ./suisei/sde/__main__.py
+# Platform Imports
+import os
+import logging
 
-# Create local install and install it inside the virtual environment
-python setup.py sdist bdist_wheel
-pip install ./dist/suisei_sde-0.1.0-py3-none-any.whl
+# SDE Imports
+from .builder import Builder
+
+class PipBuilderConfig:
+
+    """
+    Utility class that contains the builder configuration of a pip
+    builder.
+
+    Authors:
+        Attila Kovacs
+    """
+
+    def __init__(self) -> None:
+
+        """
+        Creates a new PipBuilderConfig instance.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        return
+
+class PipBuilder(Builder):
+
+    """
+    Builder implementation that executes a pip installation.
+
+    Authors:
+        Attila Kovacs
+    """
+
+    def build(self) -> None:
+
+        """
+        Executes the actual component build based on the component descriptor.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        logger = logging.getLogger('suisei.sde')

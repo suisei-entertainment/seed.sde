@@ -28,6 +28,7 @@ import json
 import logging
 import sys
 import webbrowser
+import glob
 from logging.handlers import RotatingFileHandler
 
 # Dependency Imports
@@ -517,7 +518,8 @@ class SDE:
             Attila Kovacs
         """
 
-        config_path = os.path.abspath('./.sde/sde.conf')
+        config_path = os.path.abspath(
+            os.path.expanduser('~/.sde/sde.conf'))
 
         if not os.path.isfile(config_path):
 
@@ -526,8 +528,12 @@ class SDE:
                 config_path = alternate_path
             else:
                 # Create the directory if it doesn't exist
-                if not os.path.isdir(os.path.abspath('./.sde')):
-                    os.makedirs(os.path.abspath('./.sde'))
+                if not os.path.isdir(os.path.abspath(
+                    os.path.expanduser('~/.sde'))):
+                    os.makedirs(os.path.abspath(os.path.expanduser(
+                        '~/.sde')))
+                    os.makedirs(os.path.abspath(os.path.expanduser(
+                        '~/.sde/components')))
 
                 # Create the configuration file
                 self._create_default_config(config_path)
@@ -545,19 +551,29 @@ class SDE:
             Attila Kovacs
         """
 
-        # Load the default config
-        default_config_path = os.path.abspath('./templates/sde.conf.default')
-        try:
-            with open(default_config_path, 'r') as default_file:
-                default_config = json.load(default_file)
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                'ERROR >>>>> Default configuration file template was not '
-                'found.')
-        except OSError:
-            raise OSError(
-                'ERROR >>>>> Failed to open the default configuration file'
-                'template.')
+        # Default SDE configuation descriptor
+        default_config = \
+        {
+            "version":
+            {
+                "major": 0,
+                "minor": 1,
+                "patch": 0,
+                "release": "internal",
+                "meta":
+                {
+                    "codename": "Fujin"
+                }
+            },
+            "logging":
+            {
+                "logfile": "sde.log",
+                "logdir": "~/.sde/logs",
+                "loglevel": "INFO"
+            },
+            "documentationpath": "~/.sde/build/doc/development/html/index.html",
+            "componentpath": "~/.sde/components/"
+        }
 
         # Save config file
         try:
@@ -566,6 +582,9 @@ class SDE:
         except OSError:
             print('ERROR >>>>> Failed to write the '
                   'default configuration. <<<<< ERROR')
+
+        # Get component configuration
+
 
     def _load_configuration(self, config_path: str) -> None:
 
@@ -605,19 +624,37 @@ class SDE:
                 'Logging configuration is missing from the configuration file.')
 
         # Load components
-        try:
-            components = content['components']
-            for component in components:
-                try:
-                    desc = ComponentDescriptor(component, self)
-                    self._components[desc.ID] = desc
-                except InvalidInputError:
-                    del desc
+        component_path = ''
 
+        try:
+            component_path = content['componentpath']
         except KeyError:
+            # Component path not found in the configuration, use the default
+            # path
+            component_path = '~/.sde/components/'
+
+        component_path = os.path.abspath(os.path.expanduser(component_path))
+
+        if not os.path.isdir(component_path):
             raise SystemExit(
-                'No component configuration was found in the '
-                'configuration file.')
+                'No component configuration was found under {}'.format(
+                    component_path))
+
+        # Load all component descriptors from the component directory
+        current_dir = os.getcwd()
+        os.chdir(component_path)
+        file_list = glob.glob('*.component')
+
+        for file in file_list:
+            try:
+                component_file = JsonFile(path=file)
+                component_file.load()
+                desc = ComponentDescriptor(component_file.Content)
+                self._components[desc.ID] = desc
+            except InvalidInputError:
+                del desc
+
+        os.chdir(current_dir)
 
         # Load documentation path
         try:

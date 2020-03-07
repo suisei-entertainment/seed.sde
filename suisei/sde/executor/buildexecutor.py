@@ -36,7 +36,10 @@ from suisei.sde.builder import (
     DebBuilder,
     DockerBuilder,
     MultiStageBuilder,
-    ContentBuilder)
+    ContentBuilder,
+    BashBuilder,
+    WheelBuilder,
+    PipBuilder)
 
 from .executor import Executor
 
@@ -116,9 +119,15 @@ class BuildExecutor(Executor):
         elif component.BuildType == BuildTypes.DOCKER:
             builder = DockerBuilder(component)
         elif component.BuildType == BuildTypes.MULTISTAGE:
-            builder = MultiStageBuilder
+            builder = MultiStageBuilder(component)
         elif component.BuildType == BuildTypes.CONTENT:
-            builder = ContentBuilder
+            builder = ContentBuilder(component)
+        elif component.BuildType == BuildTypes.BASH:
+            builder = BashBuilder(component)
+        elif component.BuildType == BuildTypes.WHEEL:
+            builder = WheelBuilder(component)
+        elif component.BuildType == BuildTypes.PIP:
+            builder = PipBuilder(component)
 
         builder.build()
 

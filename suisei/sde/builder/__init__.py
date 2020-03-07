@@ -35,3 +35,6 @@ from .multistagebuilder import MultiStageBuilder
 from .protobufbuilder import ProtobufBuilder
 from .pythonbuilder import PythonBuilder
 from .sphinxbuilder import SphinxBuilder
+from .bashbuilder import BashBuilder
+from .wheelbuilder import WheelBuilder
+from .pipbuilder import PipBuilder

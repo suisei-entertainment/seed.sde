@@ -31,7 +31,7 @@ from suisei.seed.exceptions import InvalidInputError
 
 # SDE Imports
 from .buildtypes import BuildTypes
-from .bashbuilder import BashBuilder
+from .bashbuilder import BashBuilderConfig
 from .artifactorybuilder import ArtifactoryBuilderConfig
 from .cmakebuilder import CMakeBuilderConfig
 from .contentbuilder import ContentBuilderConfig
@@ -43,6 +43,8 @@ from .protobufbuilder import ProtobufBuilderConfig
 from .pythonbuilder import PythonBuilderConfig
 from .sphinxbuilder import SphinxBuilderConfig
 from .versionbumperbuilder import VersionBumperBuilderConfig
+from .wheelbuilder import WheelBuilderConfig
+from .pipbuilder import PipBuilderConfig
 
 class BuilderLoader:
 
@@ -109,8 +111,12 @@ class BuilderLoader:
                 self._load_content_builder(descriptor)
             elif build_type == 'versionbumper':
                 self._load_versionbumper_builder(descriptor)
-            elif build_type == 'bash'
+            elif build_type == 'bash':
                 self._load_bash_builder(descriptor)
+            elif build_type == 'wheel':
+                self._load_wheel_builder(descriptor)
+            elif build_type == 'pip':
+                self._load_pip_builder(descriptor)
             else:
                 raise InvalidInputError(
                     'Invalid build type {} was specified in the configuration '
@@ -199,6 +205,43 @@ class BuilderLoader:
         self._component._build_type = BuildTypes.BASH
         builder_config = BashBuilderConfig()
         self._component.set_builder_config(builder_config)
+
+    def _load_wheel_builder(self, descriptor: dict) -> None:
+
+        """
+        Loads the configuration of a wheel builder from the component
+        descriptor.
+
+        Args:
+            descriptor:     The component descriptor from the configuration
+                            file.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        self._component._build_type = BuildTypes.WHEEL
+        builder_config = WheelBuilderConfig()
+        self._component.set_builder_config(builder_config)
+
+    def _load_pip_builder(self, descriptor: dict) -> None:
+
+        """
+        Loads the configuration of a pip builder from the component
+        descriptor.
+
+        Args:
+            descriptor:     The component descriptor from the configuration
+                            file.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        self._component._build_type = BuildTypes.PIP
+        builder_config = PipBuilderConfig()
+        self._component.set_builder_config(builder_config)
+
 
     def _load_sphinx_builder(self, descriptor: dict) -> None:
 
