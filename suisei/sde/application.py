@@ -592,7 +592,10 @@ class SDE:
         os.chdir(target_path)
 
         try:
-            command = 'git clone https://github.com/suisei-entertainment/seed.components.git ./components'
+            command = \
+                'git clone '
+                'https://github.com/suisei-entertainment/seed.components.git '
+                './components'
             subprocess.run(command, shell=True, check=True)
         except subprocess.CalledProcessError as error:
             logger.error('Failed to clone the components repository. '
