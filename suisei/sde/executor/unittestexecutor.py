@@ -94,8 +94,8 @@ class UnitTestExecutor(Executor):
         # Disable console logging for SEED loggers
         loggers = \
         [
-            logging.getLogger('suisei.seed.exception'),
-            logging.getLogger('suisei.seed.util'),
+            logging.getLogger('suisei.seed.exceptions'),
+            logging.getLogger('suisei.seed.utils'),
             logging.getLogger('suisei.seed.network'),
             logging.getLogger('suisei.seed.protocol'),
             logging.getLogger('suisei.seed.node'),
@@ -147,7 +147,8 @@ class UnitTestExecutor(Executor):
             Attila Kovacs
         """
 
-        test_directory = os.path.abspath('./.sde/testfiles/')
+        test_directory = os.path.abspath(os.path.expanduser(
+            '~/.sde/testfiles/'))
 
         if os.path.isdir(test_directory):
 

@@ -593,8 +593,8 @@ class SDE:
 
         try:
             command = \
-                'git clone '
-                'https://github.com/suisei-entertainment/seed.components.git '
+                'git clone ' \
+                'https://github.com/suisei-entertainment/seed.components.git '\
                 './components'
             subprocess.run(command, shell=True, check=True)
         except subprocess.CalledProcessError as error:
@@ -732,8 +732,8 @@ class SDE:
         loggers = \
         [
             logging.getLogger('suisei.sde'),
-            logging.getLogger('suisei.seed.exception'),
-            logging.getLogger('suisei.seed.util'),
+            logging.getLogger('suisei.seed.exceptions'),
+            logging.getLogger('suisei.seed.utils'),
             logging.getLogger('suisei.seed.network'),
             logging.getLogger('suisei.seed.protocol'),
             logging.getLogger('suisei.seed.node'),
