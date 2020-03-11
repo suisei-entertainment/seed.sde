@@ -575,7 +575,7 @@ class SDE:
                 "loglevel": "INFO"
             },
             "documentationpath": "~/.sde/build/doc/development/html/index.html",
-            "componentpath": "~/.sde/components/components/"
+            "componentpath": "~/.sde/components/"
         }
 
         # Save config file
@@ -659,7 +659,7 @@ class SDE:
         except KeyError:
             # Component path not found in the configuration, use the default
             # path
-            component_path = '~/.sde/components/components/'
+            component_path = '~/.sde/components/'
 
         component_path = os.path.abspath(os.path.expanduser(component_path))
         logger.debug('Loading components from %s...', component_path)
