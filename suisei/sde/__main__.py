@@ -92,7 +92,7 @@ def main():
     test_executor.add_argument(
         '--coverage',
         dest='coverage',
-        action='store_true',
+        action='store',
         help='Executes the coverage test.')
 
     installer = parser.add_argument_group(
