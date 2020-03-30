@@ -86,8 +86,9 @@ def main():
     test_executor.add_argument(
         '--linter',
         dest='linter',
-        action='store_true',
-        help='Executes the linter.')
+        action='store',
+        help='Executes the linter.',
+        metavar='component')
 
     test_executor.add_argument(
         '--coverage',
@@ -169,8 +170,9 @@ def main():
             app.execute(mode='performancetest',
                         component=args.performancetest)
 
-        if args.linter:
-            app.execute(mode='linter')
+        if args.linter is not None:
+            app.execute(mode='linter',
+                        component=args.linter)
 
         if args.coverage:
             app.execute(mode='coverage')

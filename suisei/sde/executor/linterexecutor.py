@@ -40,6 +40,26 @@ class LinterExecutor(Executor):
         Attila Kovacs
     """
 
+    def __init__(self, component: str, application: 'SDE') -> None:
+
+        """
+        Creates a new LinterExecutor instance.
+
+        Args:
+            component:          The component which will be tested.
+            application:        The SDE application instance.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        super().__init__(application)
+
+        self._component = component
+        """
+        The component to test.
+        """
+
     def execute(self) -> None:
 
         """
@@ -54,17 +74,30 @@ class LinterExecutor(Executor):
 
         logger.debug('Executing linter...')
 
-        pylint_opts = \
-        [
-            '-j 0',
-            '--reports=yes',
-            '--rcfile=./.pylintrc',
-            './suisei/'
-        ]
+        components = []
 
-        result = pylint.lint.Run(pylint_opts)
-
-        if result >= 32:
-            logger.error('Failed to execute linter.')
+        if self._component != 'all':
+            components.append(self._application.Components[self._component])
         else:
-            logger.debug('Linter executed successfully.')
+            components = self._application.Components.values()
+
+        for component in components:
+            logger.info('Executing linter for component %s', component.ID)
+            lint_dir = component
+
+            print(component.LinterDirectory)
+
+            pylint_opts = \
+            [
+                '-j 0',
+                '--reports=yes',
+                '--rcfile=./.pylintrc',
+                component.LinterDirectory
+            ]
+
+            result = pylint.lint.Run(pylint_opts)
+
+            if result >= 32:
+                logger.error('Failed to execute linter.')
+            else:
+                logger.debug('Linter executed successfully.')

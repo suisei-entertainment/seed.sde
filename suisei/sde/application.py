@@ -440,7 +440,7 @@ class SDE:
             Attila Kovacs
         """
 
-        executor = LinterExecutor(application=self)
+        executor = LinterExecutor(application=self, component=component)
         executor.execute()
 
     def _on_execute_coverage(self, component: str) -> None:
@@ -625,9 +625,11 @@ class SDE:
         """
 
         logger = logging.getLogger('suisei.sde')
+        logger.debug('Loading SDE configuration...')
 
         content = {}
 
+        logger.debug('Loading configuration file...')
         with open(config_path, 'r') as config_file:
             content = json.load(config_file)
 
@@ -651,7 +653,23 @@ class SDE:
             raise SystemExit(
                 'Logging configuration is missing from the configuration file.')
 
+        # Update components
+        logger.debug('Pulling component changes...')
+        current_dir = os.getcwd()
+        os.chdir(os.path.abspath(os.path.expanduser('~/.sde/components')))
+        try:
+            command = \
+                'git pull'
+            subprocess.run(command, shell=True, check=True)
+        except subprocess.CalledProcessError as error:
+            logger.error('Failed to update the components repository. '
+                'Error: %s', error.returncode)
+            raise SystemExit('Failed to update the component '
+                             'configuration.')
+        os.chdir(current_dir)
+
         # Load components
+        logger.debug('Loading components...')
         component_path = ''
 
         try:
@@ -690,6 +708,8 @@ class SDE:
         except KeyError:
             raise SystemExit('Documentation path was not found in the '
                              'configuration file.')
+
+        logger.debug('SDE configuration loaded.')
 
     def _configure_logging(self) -> None:
 

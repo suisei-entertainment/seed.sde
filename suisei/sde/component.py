@@ -151,6 +151,18 @@ class ComponentDescriptor:
 
         return self._builder_config
 
+    @property
+    def LinterDirectory(self) -> str:
+
+        """
+        The directory where the linter for the component should be executed.
+
+        Authors:
+            Attila Kovacs
+        """
+
+        return self._linter_directory
+
     def __init__(self, descriptor: dict, application: 'SDE') -> None:
 
         """
@@ -193,6 +205,9 @@ class ComponentDescriptor:
 
         # The builder configuration to use when building the component.
         self._builder_config = None
+
+        # The diretory where the linter for the component should be executed.
+        self._linter_directory = None
 
         try:
             self._load_from_descriptor(descriptor)
@@ -308,6 +323,15 @@ class ComponentDescriptor:
             # Default to verbosity level 1 if the configuration is not present
             # in the configuration file.
             self._ut_verbosity = 1
+
+        try:
+            self._linter_directory = os.path.abspath(
+                os.path.expanduser(descriptor['linter']['linterdir']))
+        except KeyError:
+            logger = logging.getLogger('suisei.sde')
+            logger.debug('Linter configuration was not found for component '
+                         '%s', self._id)
+            self._linter_directory = './'
 
         # Load builder configuration
         loader = BuilderLoader(self)
