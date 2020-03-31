@@ -24,9 +24,10 @@ Contains the implementation of the SDE linter executor.
 
 # Platform Imports
 import logging
+import glob
 
 # Dependency Imports
-import pylint.lint
+from pylint import epylint
 
 # SDE Imports
 from suisei.sde.executor.executor import Executor
@@ -85,19 +86,19 @@ class LinterExecutor(Executor):
             logger.info('Executing linter for component %s', component.ID)
             lint_dir = component
 
-            print(component.LinterDirectory)
+            # Find all Python file of the component
+            files = glob.glob('{}/*/*.py'.format(component.LinterDirectory),
+                              recursive=True)
 
-            pylint_opts = \
-            [
-                '-j 0',
-                '--reports=yes',
-                '--rcfile=./.pylintrc',
-                component.LinterDirectory
-            ]
+            for file in files:
 
-            result = pylint.lint.Run(pylint_opts)
+                logger.info('Executing linter on file %s', file)
 
-            if result >= 32:
-                logger.error('Failed to execute linter.')
-            else:
-                logger.debug('Linter executed successfully.')
+                (pylint_stdout, pylint_stderr) = epylint.py_run(
+                    command_options=file,
+                    return_std=True)
+
+                logger.info('Linter output: \n%s', pylint_stdout.getvalue())
+                logger.info('Linter errors: \n%s', pylint_stderr.getvalue())
+
+                logger.debug('Linter executed.')
